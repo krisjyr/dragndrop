@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./output.css" rel="stylesheet">
+
+<script>
+  function addPoint(bool) {
+    if(bool == false){
+      let i = Number(document.getElementById('counterFalse').style.getPropertyValue('--value'));
+      document.getElementById('counterFalse').style.setProperty('--value', i+1);
+    } else {
+      let i = Number(document.getElementById('counterPoint').style.getPropertyValue('--value'));
+      document.getElementById('counterPoint').style.setProperty('--value', i+1);
+    }
+
+  }
+
+
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drag(ev) {
+  ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+  ev.preventDefault();
+  var data = ev.dataTransfer.getData("text");
+  ev.target.appendChild(document.getElementById(data));
+}
+</script>
+</head>
+<body>
+
+
+<header class="">
+  <div class="hero max-h-[20%] h-full bg-base-200 flex flex-col pt-8">
+  
+    <div class="hero-content text-center">
+      <div class="max-w-2xl">
+        <h1 class="text-5xl font-bold">Kas tunned progemis keeli?</h1>
+        <p class="py-6 text-2xl">Näed erinevates keeltes "Hello World" koodi ja pead ära arvama milline keel see on.</p>
+      </div>
+    </div>
+
+    <div class="flex flex-row gap-12 text-center mb-16 m-auto w-min">
+      <div class="flex flex-col content-center">
+        <span class="m-auto text-xl pb-4">Kogutud Punktid</span>
+        <div class="flex flex-col p-2 bg-neutral rounded-box text-neutral-content w-min m-auto">
+          <span class="countdown font-mono text-2xl">
+            <span id="counterPoint" style="--value:0;"></span>
+          </span>
+        </div> 
+      </div>
+      <div class="flex flex-col content-center w-min">
+        <span class="m-auto text-xl text-wrap pb-4">Valed Vastused</span>
+        <div class="flex flex-col p-2 bg-neutral rounded-box text-neutral-content w-min m-auto">
+          <span class="countdown font-mono text-2xl">
+            <span id="counterFalse" style="--value:0;"></span>
+          </span>
+        </div> 
+      </div>
+    </div>
+  </div>
+</header>
+<main class="">
+<container class="flex flex-row gap-4 pt-8 mx-8">
+  <kbd class="kbd kbd-lg select-none cursor-pointer" id="drag1" draggable="true" ondragstart="drag(event)">HTML</kbd>
+  <kbd class="kbd kbd-lg select-none cursor-pointer" id="drag1" draggable="true" ondragstart="drag(event)">C#</kbd>
+</container>
+<div class="divider mx-8"></div>
+<container class="flex- flex-row gap-4 pt-4 mx-8">
+  <div id="div1" class="max-h-[10%] max-w-[30%] w-full h-full bg-base-300 rounded-box place-items-center" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+  <div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+</container>
+
+</main>
+</body>
+</html> 
