@@ -19,9 +19,43 @@
 
         }
 
-        var iFinish = 1;                  //  set your counter to 1
+        var iFinish = 1;
         let mesg = `You got ${document.getElementById('counterPoint').style.getProperty('--value')} points and made ${document.getElementById('falsePoint').style.getProperty('--value')} mistakes.<br><br>Average score: ${Math.round((Number(document.getElementById('counterPoint').style.getProperty('--value')) / 30) * 100)}%`;
 
+
+        function start() {
+            iFinish = 1;
+            finish()
+            draggerReset()
+            var btn = document.getElementById('mainbtny');
+            var draggers = document.getElementById('draggers')
+            var droppers = document.getElementById('droppers')
+            btn.classList.remove("btn-success");
+            btn.classList.add("btn-error");
+            btn.innerHTML = "Reset";
+            btn.setAttribute("onclick", "reset()");
+            fsort()
+            draggers.classList.remove("opacity-0");
+            droppers.classList.remove("opacity-0");
+            draggers.classList.add("opacity-100");
+            droppers.classList.add("opacity-100");
+        }
+
+        
+        function reset() {
+            counterReset()
+            var btn = document.getElementById('mainbtny');
+            btn.classList.remove("btn-error");
+            btn.classList.add("btn-success");
+            btn.innerHTML = "Start";
+            btn.setAttribute("onclick", "start()");
+            draggers.classList.remove("opacity-100");
+            droppers.classList.remove("opacity-100");
+            draggers.classList.add("opacity-0");
+            droppers.classList.add("opacity-0");
+        }
+
+        
         function finish() {         //  create a loop function
             setTimeout(function () {   //  call a 3s setTimeout when the loop is called
                 const draggers = document.getElementById('draggers');
@@ -69,37 +103,6 @@
             for (var j = 0; j <= rando.children.length; ++j);
         }
 
-        function start() {
-            iFinish = 1;
-            finish()
-            draggerReset()
-            var btn = document.getElementById('mainbtny');
-            var draggers = document.getElementById('draggers')
-            var droppers = document.getElementById('droppers')
-            btn.classList.remove("btn-success");
-            btn.classList.add("btn-error");
-            btn.innerHTML = "Reset";
-            btn.setAttribute("onclick", "reset()");
-            fsort()
-            draggers.classList.remove("opacity-0");
-            droppers.classList.remove("opacity-0");
-            draggers.classList.add("opacity-100");
-            droppers.classList.add("opacity-100");
-        }
-
-        function reset() {
-                        counterReset()
-            var btn = document.getElementById('mainbtny');
-            btn.classList.remove("btn-error");
-            btn.classList.add("btn-success");
-            btn.innerHTML = "Start";
-            btn.setAttribute("onclick", "start()");
-            draggers.classList.remove("opacity-100");
-            droppers.classList.remove("opacity-100");
-            draggers.classList.add("opacity-0");
-            droppers.classList.add("opacity-0");
-        }
-
         function fsort() {
             console.log(document.getElementById('droppers'))
             console.log(document.getElementById('draggers'))
@@ -108,7 +111,6 @@
             sequentize(document.getElementById('droppers'));
             sequentize(document.getElementById('draggers'));
         }
-
 
         function allowDrop(ev) {
             ev.preventDefault();
@@ -145,16 +147,14 @@
                 addPoint(false, 1)
             }
         }
-
-        let msg = `You got ${document.getElementById('counterPoint').style.getProperty('--value')} points and made ${document.getElementById('falsePoint').style.getProperty('--value')} mistakes.<br><br>Average score: ${Math.round((Number(document.getElementById('counterPoint').style.getProperty('--value')) / 30) * 100)}%`;
     </script>
 </head>
 
 <body>
     <dialog id="my_modal_2" class="modal">
         <div class="modal-box">
-            <h3 class="font-bold text-lg">You completed the quiz!</h3>
-            <p id="modaltext" class="py-4"></p>
+            <h3 class="font-bold text-lg select-none">You completed the quiz!</h3>
+            <p id="modaltext" class="py-4 select-none"></p>
         </div>
         <form method="dialog" class="modal-backdrop">
             <button>close</button>
@@ -165,7 +165,7 @@
         <div class="hero max-h-[20%] h-full bg-base-200 flex flex-col pt-8">
 
             <div class="hero-content text-center">
-                <div class="max-w-2xl">
+                <div class="max-w-2xl select-none">
                     <h1 class="text-5xl font-bold">Kas tunned progemis keeli?</h1>
                     <p class="py-6 text-2xl">Näed erinevates keeltes "Hello World" koodi ja pead ära arvama milline keel
                         see on. <span class="text-primary decoration-2 underline underline-offset-2 ">Max 30
@@ -178,24 +178,7 @@
                 </div>
             </div>
 
-            <div class="flex flex-row gap-12 text-center mb-12 m-auto w-min">
-                <div class="flex flex-col content-center">
-                    <span class="m-auto text-xl pb-4">Kogutud Punktid</span>
-                    <div class="flex flex-col p-2 bg-success rounded-box text-neutral-content w-min m-auto">
-                        <span class="countdown font-mono text-2xl text-success-content">
-                            <span id="counterPoint" style="--value:0;"></span>
-                        </span>
-                    </div>
-                </div>
-                <div class="flex flex-col content-center w-min">
-                    <span class="m-auto text-xl text-wrap pb-4">Valed Vastused</span>
-                    <div class="flex flex-col p-2 bg-error rounded-box text-neutral-content w-min m-auto">
-                        <span class="countdown font-mono text-2xl text-error-content">
-                            <span id="counterFalse" style="--value:0;"></span>
-                        </span>
-                    </div>
-                </div>
-            </div>
+
 
             <button onclick="start()" id="mainbtny"
                 class="btn btn-outline btn-success btn-wide mb-12 lg:btn-lg">Start</button>
@@ -203,44 +186,65 @@
         </div>
     </header>
     <main>
-        <container id="draggers" class="flex flex-row gap-4 pt-8 justify-start mx-8 opacity-0 transition duration-200">
+        <container class="flex flex-row content-center sticky top-0">
+            <container id="draggers" class="flex z-20 flex-row gap-4 pt-8 justify-start mx-8 opacity-0 transition duration-200">
 
-            <!-- DRAGGERS BEGIN -->
+                <!-- DRAGGERS BEGIN -->
+    
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag1" value1="HTML" tries="0"
+                    draggable="true" ondragstart="drag(event)">HTML</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag2" value1="C#" tries="0" draggable="true"
+                    ondragstart="drag(event)">C#</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag3" value1="C++" tries="0"
+                    draggable="true" ondragstart="drag(event)">C++</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag4" value1="CSS" tries="0"
+                    draggable="true" ondragstart="drag(event)">CSS</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag5" value1="Java" tries="0"
+                    draggable="true" ondragstart="drag(event)">Java</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag6" value1="JS" tries="0" draggable="true"
+                    ondragstart="drag(event)">Javascript</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag7" value1="Lua" tries="0"
+                    draggable="true" ondragstart="drag(event)">Lua</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag8" value1="Python" tries="0"
+                    draggable="true" ondragstart="drag(event)">Python 3</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag9" value1="Powershell" tries="0"
+                    draggable="true" ondragstart="drag(event)">Powershell</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag10" value1="PHP" tries="0"
+                    draggable="true" ondragstart="drag(event)">PHP</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag11" value1="Rust" tries="0"
+                    draggable="true" ondragstart="drag(event)">Rust</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag12" value1="Ruby" tries="0"
+                    draggable="true" ondragstart="drag(event)">Ruby</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag13" value1="TS" tries="0"
+                    draggable="true" ondragstart="drag(event)">TypeScript</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag14" value1="Assembler" tries="0"
+                    draggable="true" ondragstart="drag(event)">Assembler</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag15" value1="Brainfuck" tries="0"
+                    draggable="true" ondragstart="drag(event)">Brainfuck</kbd>
+    
+                <!-- DRAGGERS END -->
+    
+            </container>
 
-            <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag1" value1="HTML" tries="0"
-                draggable="true" ondragstart="drag(event)">HTML</kbd>
-            <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag2" value1="C#" tries="0" draggable="true"
-                ondragstart="drag(event)">C#</kbd>
-            <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag3" value1="C++" tries="0"
-                draggable="true" ondragstart="drag(event)">C++</kbd>
-            <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag4" value1="CSS" tries="0"
-                draggable="true" ondragstart="drag(event)">CSS</kbd>
-            <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag5" value1="Java" tries="0"
-                draggable="true" ondragstart="drag(event)">Java</kbd>
-            <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag6" value1="JS" tries="0" draggable="true"
-                ondragstart="drag(event)">Javascript</kbd>
-            <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag7" value1="Lua" tries="0"
-                draggable="true" ondragstart="drag(event)">Lua</kbd>
-            <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag8" value1="Python" tries="0"
-                draggable="true" ondragstart="drag(event)">Python 3</kbd>
-            <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag9" value1="Powershell" tries="0"
-                draggable="true" ondragstart="drag(event)">Powershell</kbd>
-            <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag10" value1="PHP" tries="0"
-                draggable="true" ondragstart="drag(event)">PHP</kbd>
-            <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag11" value1="Rust" tries="0"
-                draggable="true" ondragstart="drag(event)">Rust</kbd>
-            <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag12" value1="Ruby" tries="0"
-                draggable="true" ondragstart="drag(event)">Ruby</kbd>
-            <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag13" value1="TS" tries="0"
-                draggable="true" ondragstart="drag(event)">TypeScript</kbd>
-            <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag14" value1="Assembler" tries="0"
-                draggable="true" ondragstart="drag(event)">Assembler</kbd>
-            <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag15" value1="Brainfuck" tries="0"
-                draggable="true" ondragstart="drag(event)">Brainfuck</kbd>
+            <div class="flex flex-row gap-12 text-center pt-8 m-auto w-min select-none">
+                <div class="flex flex-col content-center">
+                    <div class="flex flex-col p-2 bg-success rounded-box text-neutral-content w-min m-auto tooltip tooltip-open tooltip-bottom" data-tip="Kogutud Punkid">
+                        <span class="countdown font-mono text-xl text-success-content">
+                            <span id="counterPoint" style="--value:0;"></span>
+                        </span>
+                    </div>
+                </div>
+                <div class="flex flex-col content-center w-min">
 
-            <!-- DRAGGERS END -->
-
+                    <div class="flex flex-col p-2 bg-error rounded-box text-neutral-content w-min m-auto tooltip tooltip-open tooltip-bottom" data-tip="Valed Vastused">
+                        <span class="countdown font-mono text-xl text-error-content">
+                            <span id="counterFalse" style="--value:0;"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
         </container>
+
         <div class="divider mx-8"></div>
         <container id="droppers"
             class="flex flex-row flex-wrap justify-center gap-20 pt-4 h-screen opacity-0 transition duration-200">
@@ -275,7 +279,7 @@
             <div
                 class="card dropper w-screen h-full max-w-[25%] max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto">
+                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
                     <pre data-prefix="1"><code>class HelloWorld</code></pre>
                     <pre data-prefix="2"><code>{</code></pre>
                     <pre data-prefix="3"><code>    static void Main()</code></pre>
@@ -299,7 +303,7 @@
             <div
                 class="card dropper w-screen h-full max-w-[25%] max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto">
+                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
                     <pre data-prefix="1"><code>#include &lt;iostream.h&gt;</code></pre>
                     <pre data-prefix="2"><code>main()</code></pre>
                     <pre data-prefix="3"><code>{</code></pre>
@@ -322,7 +326,7 @@
             <div
                 class="card dropper w-screen h-full max-w-[25%] max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto">
+                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
                     <pre data-prefix="1"><code>body:before {</code></pre>
                     <pre data-prefix="2"><code>    content: "Hello World";</code></pre>
                     <pre data-prefix="3"><code>}</code></pre>
@@ -342,7 +346,7 @@
             <div
                 class="card dropper w-screen h-full max-w-[25%] max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto">
+                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
                     <pre data-prefix="1"><code>class HelloWorld {</code></pre>
                     <pre data-prefix="2"><code>    static public void main( String args[] ) {</code></pre>
                     <pre data-prefix="3"><code>        System.out.println( "Hello World!" );</code></pre>
@@ -364,7 +368,7 @@
             <div
                 class="card dropper w-screen h-full max-w-[25%] max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto">
+                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
                     <pre data-prefix="1"><code>console.log("Hello World");</code></pre>
 
                 </div>
@@ -381,7 +385,7 @@
             <div
                 class="card dropper w-screen h-full max-w-[25%] max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto">
+                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
                     <pre data-prefix="1"><code>print "Hello world"</code></pre>
 
                 </div>
@@ -398,7 +402,7 @@
             <div
                 class="card dropper w-screen h-full max-w-[25%] max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto">
+                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
                     <pre data-prefix="1"><code>print("Hello World")</code></pre>
 
                 </div>
@@ -415,7 +419,7 @@
             <div
                 class="card dropper w-screen h-full max-w-[25%] max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto">
+                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
                     <pre data-prefix="1"><code>'Hello World!'</code></pre>
 
                 </div>
@@ -432,7 +436,7 @@
             <div
                 class="card dropper w-screen h-full max-w-[25%] max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto">
+                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
                     <pre data-prefix="1"><code>&lt;?php</code></pre>
                     <pre data-prefix="2"><code>    echo 'Hello World!';</code></pre>
                     <pre data-prefix="3"><code>?&lt;</code></pre>
@@ -452,7 +456,7 @@
             <div
                 class="card dropper w-screen h-full max-w-[25%] max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto">
+                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
                     <pre data-prefix="1"><code>fn main() {</code></pre>
                     <pre data-prefix="2"><code>    println!("Hello World!");</code></pre>
                     <pre data-prefix="3"><code>}</code></pre>
@@ -472,7 +476,7 @@
             <div
                 class="card dropper w-screen h-full max-w-[25%] max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto">
+                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
                     <pre data-prefix="1"><code>puts "Hello World!"</code></pre>
 
                 </div>
@@ -490,7 +494,7 @@
             <div
                 class="card dropper w-screen h-full max-w-[25%] max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto">
+                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
                     <pre data-prefix="1"><code>alert('Hello world!');</code></pre>
 
                 </div>
@@ -508,7 +512,7 @@
             <div
                 class="card dropper w-screen h-full max-w-[25%] max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto">
+                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
                     <pre data-prefix="1"><code>SWI "OS_WriteS"</code></pre>
                     <pre data-prefix="2"><code>EQUS "Hello World!"</code></pre>
                     <pre data-prefix="3"><code>EQUB 0</code></pre>
@@ -530,7 +534,7 @@
             <div
                 class="card dropper w-screen h-full max-w-[25%] max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto">
+                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
                     <pre data-prefix="1"><code>++++++++++[>+++++++>++++++++++>+++<<<-]>++.>+.+++++++</code></pre>
                     <pre data-prefix="2"><code>..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.</code></pre>
 
