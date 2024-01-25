@@ -1,13 +1,34 @@
 <!DOCTYPE HTML>
-<html>
+<html data-theme="maintheme">
 
 <head>
+    <title>Drag and Drop</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <link href="./output.css" rel="stylesheet">
 
     <script>
+        const pageAccessedByReload = (
+            (window.performance.navigation && window.performance.navigation.type === 1) ||
+            window.performance
+                .getEntriesByType('navigation')
+                .map((nav) => nav.type)
+                .includes('reload')
+        );
+
+        setTimeout(function () {   //  call a 3s setTimeout when the loop is called
+            if (pageAccessedByReload) {
+                window.scrollTo(0, 0)
+            }
+            iFinish++;
+            //  increment the counter
+            if (iFinish < 10) {           //  if the counter < 10, call the loop function
+                iFinish = 1
+                finish();             //  ..  again which will trigger another 
+            }                       //  ..  setTimeout()
+        }, 50)
+
         function addPoint(bool, val) {
             if (bool == false) {
                 let i = Number(document.getElementById('counterFalse').style.getPropertyValue('--value'));
@@ -20,8 +41,6 @@
         }
 
         var iFinish = 1;
-        let mesg = `You got ${document.getElementById('counterPoint').style.getProperty('--value')} points and made ${document.getElementById('falsePoint').style.getProperty('--value')} mistakes.<br><br>Average score: ${Math.round((Number(document.getElementById('counterPoint').style.getProperty('--value')) / 30) * 100)}%`;
-
 
         function start() {
             iFinish = 1;
@@ -33,7 +52,9 @@
             var droppers = document.getElementById('droppers')
             var everythingLiterally = document.getElementById("everythingLiterally")
             btn.classList.remove("btn-success");
+            btn.classList.remove("shadow-success");
             btn.classList.add("btn-error");
+            btn.classList.add("shadow-error");
             btn.innerHTML = "Reset";
             btn.setAttribute("onclick", "reset()");
             fsort()
@@ -51,7 +72,9 @@
             counterReset()
             var btn = document.getElementById('mainbtny');
             btn.classList.remove("btn-error");
+            btn.classList.remove("shadow-error");
             btn.classList.add("btn-success");
+            btn.classList.add("shadow-success");
             btn.innerHTML = "Start";
             btn.setAttribute("onclick", "start()");
             draggers.classList.remove("opacity-100");
@@ -116,7 +139,7 @@
                     modaltitle.classList.remove("text-info")
                     modaltitle.classList.remove("text-error")
                     modaltitle.classList.remove("text-warning")
-                                    } else if (scorewithmistakes <= 99) {
+                } else if (scorewithmistakes <= 99) {
                     titlemsg = "Nerd 🤓"
                     modaltitle.classList.add("text-primary")
                     modaltitle.classList.remove("text-secondary")
@@ -135,7 +158,7 @@
                 }
 
                 let mesg = `You got <span class="text-success font-bold">${points}</span> points and made <span class="text-error font-bold">${mistakes}</span> mistakes.<br><br>Average score: ${Math.round((Number(points) / 30) * 100)}%<br>Score with mistakes: ${scorewithmistakes}%`;
-                if (draggers.children.length <= 0   ) {
+                if (draggers.children.length <= 0) {
                     iFinish = 11
                     console.log("yup")
                     my_modal_2.showModal();
@@ -164,6 +187,13 @@
             for (i = 0; i < kbdthing.length; i++) {
                 kbdthing[i].classList.remove("text-warning")
                 kbdthing[i].classList.remove("text-error")
+                kbdthing[i].classList.add("text-accent")
+                kbdthing[i].classList.remove("border-warning")
+                kbdthing[i].classList.remove("border-error")
+                kbdthing[i].classList.add("border-accent")
+                kbdthing[i].classList.remove("hover:shadow-warning")
+                kbdthing[i].classList.remove("hover:shadow-error")
+                kbdthing[i].classList.add("hover:shadow-accent")
                 kbdthing[i].setAttribute("tries", 0)
             }
         }
@@ -222,12 +252,20 @@
             } else {
                 datathing.setAttribute("tries", Number(tries) + 1)
                 if (tries < 1) {
+                    datathing.classList.remove("text-accent")
+                    datathing.classList.remove("border-accent")
+                    datathing.classList.remove("hover:shadow-accent")
                     datathing.classList.add("text-warning")
+                    datathing.classList.add("border-warning")
+                    datathing.classList.add("hover:shadow-warning")
                 } else {
                     datathing.classList.remove("text-warning")
+                    datathing.classList.remove("border-warning")
+                    datathing.classList.remove("hover:shadow-warning")
                     datathing.classList.add("text-error")
+                    datathing.classList.add("border-error")
+                    datathing.classList.add("hover:shadow-error")
                 }
-                console.log(datathing.getAttribute("tries"))
                 addPoint(false, 1)
             }
         }
@@ -252,7 +290,7 @@
                 <div class="max-w-2xl select-none">
                     <h1 class="text-5xl font-bold">Kas tunned progemis keeli?</h1>
                     <p class="py-6 text-2xl">Näed erinevates keeltes "Hello World" koodi ja pead ära arvama milline keel
-                        see on. <span class="text-primary decoration-2 underline underline-offset-2 ">Max 30
+                        see on. <span class="decoration-2 font-bold underline underline-offset-2 ">Max 30
                             Punkti</span></p>
                     <ul class="list-inside">
                         <li class=" text-xl text-success">2 Punkti - Kui vastus on esimese arvamisega õige</li>
@@ -262,7 +300,7 @@
                 </div>
             </div>
             <button onclick="start()" id="mainbtny"
-                class="btn btn-outline btn-success btn-wide mb-12 mt-6 lg:btn-lg">Start</button>
+                class="btn btn-outline btn-success btn-wide mb-12 mt-6 lg:btn-lg shadow shadow-success hover:shadow-lg">Start</button>
 
         </div>
     </header>
@@ -273,36 +311,36 @@
 
                 <!-- DRAGGERS BEGIN -->
 
-                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag1" value1="HTML" tries="0"
-                    draggable="true" ondragstart="drag(event)">HTML</kbd>
-                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag2" value1="C#" tries="0"
-                    draggable="true" ondragstart="drag(event)">C#</kbd>
-                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag3" value1="C++" tries="0"
-                    draggable="true" ondragstart="drag(event)">C++</kbd>
-                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag4" value1="CSS" tries="0"
-                    draggable="true" ondragstart="drag(event)">CSS</kbd>
-                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag5" value1="Java" tries="0"
-                    draggable="true" ondragstart="drag(event)">Java</kbd>
-                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag6" value1="JS" tries="0"
-                    draggable="true" ondragstart="drag(event)">Javascript</kbd>
-                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag7" value1="Lua" tries="0"
-                    draggable="true" ondragstart="drag(event)">Lua</kbd>
-                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag8" value1="Python" tries="0"
-                    draggable="true" ondragstart="drag(event)">Python 3</kbd>
-                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag9" value1="Powershell" tries="0"
-                    draggable="true" ondragstart="drag(event)">Powershell</kbd>
-                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag10" value1="PHP" tries="0"
-                    draggable="true" ondragstart="drag(event)">PHP</kbd>
-                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag11" value1="Rust" tries="0"
-                    draggable="true" ondragstart="drag(event)">Rust</kbd>
-                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag12" value1="Ruby" tries="0"
-                    draggable="true" ondragstart="drag(event)">Ruby</kbd>
-                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag13" value1="TS" tries="0"
-                    draggable="true" ondragstart="drag(event)">TypeScript</kbd>
-                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag14" value1="Assembler" tries="0"
-                    draggable="true" ondragstart="drag(event)">Assembler</kbd>
-                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer" id="drag15" value1="Brainfuck" tries="0"
-                    draggable="true" ondragstart="drag(event)">Brainfuck</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer text-accent border-accent hover:shadow-md hover:shadow-accent"
+                    id="drag1" value1="HTML" tries="0" draggable="true" ondragstart="drag(event)">HTML</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer text-accent border-accent hover:shadow-md hover:shadow-accent"
+                    id="drag2" value1="C#" tries="0" draggable="true" ondragstart="drag(event)">C#</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer text-accent border-accent hover:shadow-md hover:shadow-accent"
+                    id="drag3" value1="C++" tries="0" draggable="true" ondragstart="drag(event)">C++</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer text-accent border-accent hover:shadow-md hover:shadow-accent"
+                    id="drag4" value1="CSS" tries="0" draggable="true" ondragstart="drag(event)">CSS</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer text-accent border-accent hover:shadow-md hover:shadow-accent"
+                    id="drag5" value1="Java" tries="0" draggable="true" ondragstart="drag(event)">Java</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer text-accent border-accent hover:shadow-md hover:shadow-accent"
+                    id="drag6" value1="JS" tries="0" draggable="true" ondragstart="drag(event)">Javascript</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer text-accent border-accent hover:shadow-md hover:shadow-accent"
+                    id="drag7" value1="Lua" tries="0" draggable="true" ondragstart="drag(event)">Lua</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer text-accent border-accent hover:shadow-md hover:shadow-accent"
+                    id="drag8" value1="Python" tries="0" draggable="true" ondragstart="drag(event)">Python 3</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer text-accent border-accent hover:shadow-md hover:shadow-accent"
+                    id="drag9" value1="Powershell" tries="0" draggable="true" ondragstart="drag(event)">Powershell</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer text-accent border-accent hover:shadow-md hover:shadow-accent"
+                    id="drag10" value1="PHP" tries="0" draggable="true" ondragstart="drag(event)">PHP</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer text-accent border-accent hover:shadow-md hover:shadow-accent"
+                    id="drag11" value1="Rust" tries="0" draggable="true" ondragstart="drag(event)">Rust</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer text-accent border-accent hover:shadow-md hover:shadow-accent"
+                    id="drag12" value1="Ruby" tries="0" draggable="true" ondragstart="drag(event)">Ruby</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer text-accent border-accent hover:shadow-md hover:shadow-accent"
+                    id="drag13" value1="TS" tries="0" draggable="true" ondragstart="drag(event)">TypeScript</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer text-accent border-accent hover:shadow-md hover:shadow-accent"
+                    id="drag14" value1="Assembler" tries="0" draggable="true" ondragstart="drag(event)">Assembler</kbd>
+                <kbd class="kbd kbd-lg select-none my-auto cursor-pointer text-accent border-accent hover:shadow-md hover:shadow-accent"
+                    id="drag15" value1="Brainfuck" tries="0" draggable="true" ondragstart="drag(event)">Brainfuck</kbd>
 
                 <!-- DRAGGERS END -->
 
@@ -315,9 +353,9 @@
                             class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
                     </span>
-                    <div class="flex flex-col p-2 bg-success rounded-box text-neutral-content w-min m-auto tooltip tooltip-bottom"
+                    <div class="flex flex-col p-2 bg-success shadow shadow-success rounded-box text-neutral-content w-min m-auto tooltip tooltip-bottom"
                         data-tip="Kogutud Punkid">
-                        <span class="countdown font-mono text-xl text-success-content">
+                        <span class="countdown font-mono text-xl text-green-950">
                             <span id="counterPoint" style="--value:0;"></span>
                         </span>
                     </div>
@@ -328,9 +366,9 @@
                             class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
                     </span>
-                    <div class="flex flex-col p-2 bg-error rounded-box text-neutral-content w-min m-auto tooltip tooltip-bottom"
+                    <div class="flex flex-col p-2 bg-error shadow shadow-error rounded-box text-neutral-content w-min m-auto tooltip tooltip-bottom"
                         data-tip="Valed Vastused">
-                        <span class="countdown font-mono text-xl text-error-content">
+                        <span class="countdown font-mono text-xl text-red-950">
                             <span id="counterFalse" style="--value:0;"></span>
                         </span>
                     </div>
@@ -347,24 +385,26 @@
             <div
                 class="card dropper w-screen h-full max-w-[75%] xl:max-w-[25%] m-auto xl:m-0 max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto">
-                    <pre data-prefix="1"><code>&lt;html&gt;</code></pre>
-                    <pre data-prefix="2"><code>    &lt;head&gt;</code></pre>
-                    <pre data-prefix="3"><code>        &lt;title&gt;Hello World!&lt;/title&gt;</code></pre>
-                    <pre data-prefix="4"><code>    &lt;/head&gt;</code></pre>
-                    <pre data-prefix="5"><code>    &lt;body&gt;</code></pre>
-                    <pre data-prefix="6"><code>        Hello World!</code></pre>
-                    <pre data-prefix="7"><code>    &lt;/body&gt;</code></pre>
-                    <pre data-prefix="8"><code>&lt;/html&gt;</code></pre>
+                <div
+                    class="mockup-code w-full h-full bg-transparent overflow-auto select-none border border-accent border-b-0 rounded-b-none">
+                    <pre data-prefix="1" class="text-accent"><code>&lt;html&gt;</code></pre>
+                    <pre data-prefix="2" class="text-accent"><code>    &lt;head&gt;</code></pre>
+                    <pre data-prefix="3"
+                        class="text-accent"><code>        &lt;title&gt;Hello World!&lt;/title&gt;</code></pre>
+                    <pre data-prefix="4" class="text-accent"><code>    &lt;/head&gt;</code></pre>
+                    <pre data-prefix="5" class="text-accent"><code>    &lt;body&gt;</code></pre>
+                    <pre data-prefix="6" class="text-accent"><code>        Hello World!</code></pre>
+                    <pre data-prefix="7" class="text-accent"><code>    &lt;/body&gt;</code></pre>
+                    <pre data-prefix="8" class="text-accent"><code>&lt;/html&gt;</code></pre>
 
                 </div>
                 <!-- EDIT HERE -->
                 <div
-                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-warning border-dashed rounded-b-box">
+                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-accent border-dashed rounded-b-box">
                     <div value1="HTML" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"
                         class="w-full h-full flex flex-row gap-2 justify-center droppyzoney"></div>
                     <span
-                        class="m-auto text-warning uppercase select-none underline decoration-warning decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
+                        class="m-auto text-accent uppercase select-none underline decoration-accent decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
                 </div>
 
             </div>
@@ -372,23 +412,25 @@
             <div
                 class="card dropper w-screen h-full max-w-[75%] xl:max-w-[25%] m-auto xl:m-0 max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
-                    <pre data-prefix="1"><code>class HelloWorld</code></pre>
-                    <pre data-prefix="2"><code>{</code></pre>
-                    <pre data-prefix="3"><code>    static void Main()</code></pre>
-                    <pre data-prefix="4"><code>    {</code></pre>
-                    <pre data-prefix="5"><code>        System.Console.WriteLine("Hello, World!");</code></pre>
-                    <pre data-prefix="6"><code>    }</code></pre>
-                    <pre data-prefix="7"><code>}</code></pre>
+                <div
+                    class="mockup-code w-full h-full bg-transparent overflow-auto select-none border border-accent border-b-0 rounded-b-none">
+                    <pre data-prefix="1" class="text-accent"><code>class HelloWorld</code></pre>
+                    <pre data-prefix="2" class="text-accent"><code>{</code></pre>
+                    <pre data-prefix="3" class="text-accent"><code>    static void Main()</code></pre>
+                    <pre data-prefix="4" class="text-accent"><code>    {</code></pre>
+                    <pre data-prefix="5"
+                        class="text-accent"><code>        System.Console.WriteLine("Hello, World!");</code></pre>
+                    <pre data-prefix="6" class="text-accent"><code>    }</code></pre>
+                    <pre data-prefix="7" class="text-accent"><code>}</code></pre>
 
                 </div>
                 <!-- EDIT HERE -->
                 <div
-                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-warning border-dashed rounded-b-box">
+                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-accent border-dashed rounded-b-box">
                     <div value1="C#" id="div2" ondrop="drop(event)" ondragover="allowDrop(event)"
                         class="w-full h-full flex flex-row gap-2 justify-center droppyzoney"></div>
                     <span
-                        class="m-auto text-warning uppercase select-none underline decoration-warning decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
+                        class="m-auto text-accent uppercase select-none underline decoration-accent decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
                 </div>
 
             </div>
@@ -396,22 +438,23 @@
             <div
                 class="card dropper w-screen h-full max-w-[75%] xl:max-w-[25%] m-auto xl:m-0 max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
-                    <pre data-prefix="1"><code>#include &lt;iostream.h&gt;</code></pre>
-                    <pre data-prefix="2"><code>main()</code></pre>
-                    <pre data-prefix="3"><code>{</code></pre>
-                    <pre data-prefix="4"><code>    cout << "Hello World!" << endl;</code></pre>
-                    <pre data-prefix="5"><code>    return 0;</code></pre>
-                    <pre data-prefix="6"><code>}</code></pre>
+                <div
+                    class="mockup-code w-full h-full bg-transparent overflow-auto select-none border border-accent border-b-0 rounded-b-none">
+                    <pre data-prefix="1" class="text-accent"><code>#include &lt;iostream.h&gt;</code></pre>
+                    <pre data-prefix="2" class="text-accent"><code>main()</code></pre>
+                    <pre data-prefix="3" class="text-accent"><code>{</code></pre>
+                    <pre data-prefix="4" class="text-accent"><code>    cout << "Hello World!" << endl;</code></pre>
+                    <pre data-prefix="5" class="text-accent"><code>    return 0;</code></pre>
+                    <pre data-prefix="6" class="text-accent"><code>}</code></pre>
 
                 </div>
                 <!-- EDIT HERE -->
                 <div
-                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-warning border-dashed rounded-b-box">
+                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-accent border-dashed rounded-b-box">
                     <div value1="C++" id="div3" ondrop="drop(event)" ondragover="allowDrop(event)"
                         class="w-full h-full flex flex-row gap-2 justify-center droppyzoney"></div>
                     <span
-                        class="m-auto text-warning uppercase select-none underline decoration-warning decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
+                        class="m-auto text-accent uppercase select-none underline decoration-accent decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
                 </div>
 
             </div>
@@ -419,19 +462,20 @@
             <div
                 class="card dropper w-screen h-full max-w-[75%] xl:max-w-[25%] m-auto xl:m-0 max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
-                    <pre data-prefix="1"><code>body:before {</code></pre>
-                    <pre data-prefix="2"><code>    content: "Hello World";</code></pre>
-                    <pre data-prefix="3"><code>}</code></pre>
+                <div
+                    class="mockup-code w-full h-full bg-transparent overflow-auto select-none border border-accent border-b-0 rounded-b-none">
+                    <pre data-prefix="1" class="text-accent"><code>body:before {</code></pre>
+                    <pre data-prefix="2" class="text-accent"><code>    content: "Hello World";</code></pre>
+                    <pre data-prefix="3" class="text-accent"><code>}</code></pre>
 
                 </div>
                 <!-- EDIT HERE -->
                 <div
-                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-warning border-dashed rounded-b-box">
+                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-accent border-dashed rounded-b-box">
                     <div value1="CSS" id="div4" ondrop="drop(event)" ondragover="allowDrop(event)"
                         class="w-full h-full flex flex-row gap-2 justify-center droppyzoney"></div>
                     <span
-                        class="m-auto text-warning uppercase select-none underline decoration-warning decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
+                        class="m-auto text-accent uppercase select-none underline decoration-accent decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
                 </div>
 
             </div>
@@ -439,21 +483,24 @@
             <div
                 class="card dropper w-screen h-full max-w-[75%] xl:max-w-[25%] m-auto xl:m-0 max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
-                    <pre data-prefix="1"><code>class HelloWorld {</code></pre>
-                    <pre data-prefix="2"><code>    static public void main( String args[] ) {</code></pre>
-                    <pre data-prefix="3"><code>        System.out.println( "Hello World!" );</code></pre>
-                    <pre data-prefix="4"><code>    }</code></pre>
-                    <pre data-prefix="5"><code>}</code></pre>
+                <div
+                    class="mockup-code w-full h-full bg-transparent overflow-auto select-none border border-accent border-b-0 rounded-b-none">
+                    <pre data-prefix="1" class="text-accent"><code>class HelloWorld {</code></pre>
+                    <pre data-prefix="2"
+                        class="text-accent"><code>    static public void main( String args[] ) {</code></pre>
+                    <pre data-prefix="3"
+                        class="text-accent"><code>        System.out.println( "Hello World!" );</code></pre>
+                    <pre data-prefix="4" class="text-accent"><code>    }</code></pre>
+                    <pre data-prefix="5" class="text-accent"><code>}</code></pre>
 
                 </div>
                 <!-- EDIT HERE -->
                 <div
-                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-warning border-dashed rounded-b-box">
+                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-accent border-dashed rounded-b-box">
                     <div value1="Java" id="div5" ondrop="drop(event)" ondragover="allowDrop(event)"
                         class="w-full h-full flex flex-row gap-2 justify-center droppyzoney"></div>
                     <span
-                        class="m-auto text-warning uppercase select-none underline decoration-warning decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
+                        class="m-auto text-accent uppercase select-none underline decoration-accent decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
                 </div>
 
             </div>
@@ -461,87 +508,92 @@
             <div
                 class="card dropper w-screen h-full max-w-[75%] xl:max-w-[25%] m-auto xl:m-0 max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
-                    <pre data-prefix="1"><code>console.log("Hello World");</code></pre>
+                <div
+                    class="mockup-code w-full h-full bg-transparent overflow-auto select-none border border-accent border-b-0 rounded-b-none">
+                    <pre data-prefix="1" class="text-accent"><code>console.log("Hello World");</code></pre>
 
                 </div>
                 <!-- EDIT HERE -->
                 <div
-                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-warning border-dashed rounded-b-box">
+                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-accent border-dashed rounded-b-box">
                     <div value1="JS" id="div6" ondrop="drop(event)" ondragover="allowDrop(event)"
                         class="w-full h-full flex flex-row gap-2 justify-center droppyzoney"></div>
                     <span
-                        class="m-auto text-warning uppercase select-none underline decoration-warning decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
+                        class="m-auto text-accent uppercase select-none underline decoration-accent decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
                 </div>
             </div>
 
             <div
                 class="card dropper w-screen h-full max-w-[75%] xl:max-w-[25%] m-auto xl:m-0 max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
-                    <pre data-prefix="1"><code>print "Hello world"</code></pre>
+                <div
+                    class="mockup-code w-full h-full bg-transparent overflow-auto select-none border border-accent border-b-0 rounded-b-none">
+                    <pre data-prefix="1" class="text-accent"><code>print "Hello world"</code></pre>
 
                 </div>
                 <!-- EDIT HERE -->
                 <div
-                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-warning border-dashed rounded-b-box">
+                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-accent border-dashed rounded-b-box">
                     <div value1="Lua" id="div7" ondrop="drop(event)" ondragover="allowDrop(event)"
                         class="w-full h-full flex flex-row gap-2 justify-center droppyzoney"></div>
                     <span
-                        class="m-auto text-warning uppercase select-none underline decoration-warning decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
+                        class="m-auto text-accent uppercase select-none underline decoration-accent decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
                 </div>
             </div>
 
             <div
                 class="card dropper w-screen h-full max-w-[75%] xl:max-w-[25%] m-auto xl:m-0 max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
-                    <pre data-prefix="1"><code>print("Hello World")</code></pre>
+                <div
+                    class="mockup-code w-full h-full bg-transparent overflow-auto select-none border border-accent border-b-0 rounded-b-none">
+                    <pre data-prefix="1" class="text-accent"><code>print("Hello World")</code></pre>
 
                 </div>
                 <!-- EDIT HERE -->
                 <div
-                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-warning border-dashed rounded-b-box">
+                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-accent border-dashed rounded-b-box">
                     <div value1="Python" id="div8" ondrop="drop(event)" ondragover="allowDrop(event)"
                         class="w-full h-full flex flex-row gap-2 justify-center droppyzoney"></div>
                     <span
-                        class="m-auto text-warning uppercase select-none underline decoration-warning decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
+                        class="m-auto text-accent uppercase select-none underline decoration-accent decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
                 </div>
             </div>
 
             <div
                 class="card dropper w-screen h-full max-w-[75%] xl:max-w-[25%] m-auto xl:m-0 max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
-                    <pre data-prefix="1"><code>'Hello World!'</code></pre>
+                <div
+                    class="mockup-code w-full h-full bg-transparent overflow-auto select-none border border-accent border-b-0 rounded-b-none">
+                    <pre data-prefix="1" class="text-accent"><code>'Hello World!'</code></pre>
 
                 </div>
                 <!-- EDIT HERE -->
                 <div
-                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-warning border-dashed rounded-b-box">
+                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-accent border-dashed rounded-b-box">
                     <div value1="Powershell" id="div9" ondrop="drop(event)" ondragover="allowDrop(event)"
                         class="w-full h-full flex flex-row gap-2 justify-center droppyzoney"></div>
                     <span
-                        class="m-auto text-warning uppercase select-none underline decoration-warning decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
+                        class="m-auto text-accent uppercase select-none underline decoration-accent decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
                 </div>
             </div>
 
             <div
                 class="card dropper w-screen h-full max-w-[75%] xl:max-w-[25%] m-auto xl:m-0 max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
-                    <pre data-prefix="1"><code>&lt;?php</code></pre>
-                    <pre data-prefix="2"><code>    echo 'Hello World!';</code></pre>
-                    <pre data-prefix="3"><code>?&lt;</code></pre>
+                <div
+                    class="mockup-code w-full h-full bg-transparent overflow-auto select-none border border-accent border-b-0 rounded-b-none">
+                    <pre data-prefix="1" class="text-accent"><code>&lt;?php</code></pre>
+                    <pre data-prefix="2" class="text-accent"><code>    echo 'Hello World!';</code></pre>
+                    <pre data-prefix="3" class="text-accent"><code>?&lt;</code></pre>
 
                 </div>
                 <!-- EDIT HERE -->
                 <div
-                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-warning border-dashed rounded-b-box">
+                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-accent border-dashed rounded-b-box">
                     <div value1="PHP" id="div10" ondrop="drop(event)" ondragover="allowDrop(event)"
                         class="w-full h-full flex flex-row gap-2 justify-center droppyzoney"></div>
                     <span
-                        class="m-auto text-warning uppercase select-none underline decoration-warning decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
+                        class="m-auto text-accent uppercase select-none underline decoration-accent decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
                 </div>
 
             </div>
@@ -549,19 +601,20 @@
             <div
                 class="card dropper w-screen h-full max-w-[75%] xl:max-w-[25%] m-auto xl:m-0 max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
-                    <pre data-prefix="1"><code>fn main() {</code></pre>
-                    <pre data-prefix="2"><code>    println!("Hello World!");</code></pre>
-                    <pre data-prefix="3"><code>}</code></pre>
+                <div
+                    class="mockup-code w-full h-full bg-transparent overflow-auto select-none border border-accent border-b-0 rounded-b-none">
+                    <pre data-prefix="1" class="text-accent"><code>fn main() {</code></pre>
+                    <pre data-prefix="2" class="text-accent"><code>    println!("Hello World!");</code></pre>
+                    <pre data-prefix="3" class="text-accent"><code>}</code></pre>
 
                 </div>
                 <!-- EDIT HERE -->
                 <div
-                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-warning border-dashed rounded-b-box">
+                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-accent border-dashed rounded-b-box">
                     <div value1="Rust" id="div11" ondrop="drop(event)" ondragover="allowDrop(event)"
                         class="w-full h-full flex flex-row gap-2 justify-center droppyzoney"></div>
                     <span
-                        class="m-auto text-warning uppercase select-none underline decoration-warning decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
+                        class="m-auto text-accent uppercase select-none underline decoration-accent decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
                 </div>
 
             </div>
@@ -569,17 +622,18 @@
             <div
                 class="card dropper w-screen h-full max-w-[75%] xl:max-w-[25%] m-auto xl:m-0 max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
-                    <pre data-prefix="1"><code>puts "Hello World!"</code></pre>
+                <div
+                    class="mockup-code w-full h-full bg-transparent overflow-auto select-none border border-accent border-b-0 rounded-b-none">
+                    <pre data-prefix="1" class="text-accent"><code>puts "Hello World!"</code></pre>
 
                 </div>
                 <!-- EDIT HERE -->
                 <div
-                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-warning border-dashed rounded-b-box">
+                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-accent border-dashed rounded-b-box">
                     <div value1="Ruby" id="div12" ondrop="drop(event)" ondragover="allowDrop(event)"
                         class="w-full h-full flex flex-row gap-2 justify-center droppyzoney"></div>
                     <span
-                        class="m-auto text-warning uppercase select-none underline decoration-warning decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
+                        class="m-auto text-accent uppercase select-none underline decoration-accent decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
                 </div>
 
             </div>
@@ -587,17 +641,18 @@
             <div
                 class="card dropper w-screen h-full max-w-[75%] xl:max-w-[25%] m-auto xl:m-0 max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
-                    <pre data-prefix="1"><code>alert('Hello world!');</code></pre>
+                <div
+                    class="mockup-code w-full h-full bg-transparent overflow-auto select-none border border-accent border-b-0 rounded-b-none">
+                    <pre data-prefix="1" class="text-accent"><code>alert('Hello world!');</code></pre>
 
                 </div>
                 <!-- EDIT HERE -->
                 <div
-                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-warning border-dashed rounded-b-box">
+                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-accent border-dashed rounded-b-box">
                     <div value1="TS" id="div13" ondrop="drop(event)" ondragover="allowDrop(event)"
                         class="w-full h-full flex flex-row gap-2 justify-center droppyzoney"></div>
                     <span
-                        class="m-auto text-warning uppercase select-none underline decoration-warning decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
+                        class="m-auto text-accent uppercase select-none underline decoration-accent decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
                 </div>
 
             </div>
@@ -605,21 +660,22 @@
             <div
                 class="card dropper w-screen h-full max-w-[75%] xl:max-w-[25%] m-auto xl:m-0 max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
-                    <pre data-prefix="1"><code>SWI "OS_WriteS"</code></pre>
-                    <pre data-prefix="2"><code>EQUS "Hello World!"</code></pre>
-                    <pre data-prefix="3"><code>EQUB 0</code></pre>
-                    <pre data-prefix="4"><code>ALIGN</code></pre>
-                    <pre data-prefix="5"><code>MOV PC,R14</code></pre>
+                <div
+                    class="mockup-code w-full h-full bg-transparent overflow-auto select-none border border-accent border-b-0 rounded-b-none">
+                    <pre data-prefix="1" class="text-accent"><code>SWI "OS_WriteS"</code></pre>
+                    <pre data-prefix="2" class="text-accent"><code>EQUS "Hello World!"</code></pre>
+                    <pre data-prefix="3" class="text-accent"><code>EQUB 0</code></pre>
+                    <pre data-prefix="4" class="text-accent"><code>ALIGN</code></pre>
+                    <pre data-prefix="5" class="text-accent"><code>MOV PC,R14</code></pre>
 
                 </div>
                 <!-- EDIT HERE -->
                 <div
-                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-warning border-dashed rounded-b-box">
+                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-accent border-dashed rounded-b-box">
                     <div value1="Assembler" id="div14" ondrop="drop(event)" ondragover="allowDrop(event)"
                         class="w-full h-full flex flex-row gap-2 justify-center droppyzoney"></div>
                     <span
-                        class="m-auto text-warning uppercase select-none underline decoration-warning decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
+                        class="m-auto text-accent uppercase select-none underline decoration-accent decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
                 </div>
 
             </div>
@@ -627,18 +683,21 @@
             <div
                 class="card dropper w-screen h-full max-w-[75%] xl:max-w-[25%] m-auto xl:m-0 max-h-[30%] bg-base-300 rounded-box flex flex-col content-center">
 
-                <div class="mockup-code w-full h-full bg-transparent overflow-auto select-none">
-                    <pre data-prefix="1"><code>++++++++++[>+++++++>++++++++++>+++<<<-]>++.>+.+++++++</code></pre>
-                    <pre data-prefix="2"><code>..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.</code></pre>
+                <div
+                    class="mockup-code w-full h-full bg-transparent overflow-auto select-none border border-accent border-b-0 rounded-b-none">
+                    <pre data-prefix="1"
+                        class="text-accent"><code>++++++++++[>+++++++>++++++++++>+++<<<-]>++.>+.+++++++</code></pre>
+                    <pre data-prefix="2"
+                        class="text-accent"><code>..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.</code></pre>
 
                 </div>
                 <!-- EDIT HERE -->
                 <div
-                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-warning border-dashed rounded-b-box">
+                    class="w-full h-full max-h-[20%] bg-transparent stack mx-auto text-center border border-accent border-dashed rounded-b-box">
                     <div value1="Brainfuck" id="div15" ondrop="drop(event)" ondragover="allowDrop(event)"
                         class="w-full h-full flex flex-row gap-2 justify-center droppyzoney"></div>
                     <span
-                        class="m-auto text-warning uppercase select-none underline decoration-warning decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
+                        class="m-auto text-accent uppercase select-none underline decoration-accent decoration-2 underline-offset-2 tracking-wide pointer-events-none">Dropzone</span>
                 </div>
 
             </div>
