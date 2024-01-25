@@ -61,12 +61,33 @@
             setTimeout(function () {   //  call a 3s setTimeout when the loop is called
                 const draggers = document.getElementById('draggers');
                 const modaltext = document.getElementById("modaltext")
-                let mesg = `You got ${document.getElementById('counterPoint').style.getPropertyValue('--value')} points and made ${document.getElementById('counterFalse').style.getPropertyValue('--value')} mistakes.<br><br>Average score: ${Math.round((Number(document.getElementById('counterPoint').style.getPropertyValue('--value')) / 30) * 100)}%`;
+                const points = document.getElementById('counterPoint').style.getPropertyValue('--value')
+                const mistakes = document.getElementById('counterFalse').style.getPropertyValue('--value')
+                const score = Math.round((Number(points) / 30) * 100)
+                const withmistakes = Math.round((Number(mistakes) / 30) * 100)
+                const modaltitle = document.getElementById("modaltitle")
+                let titlemsg = ""
+                if (score == 0) {
+                    titlemsg = "You are a disgrace!"
+                } else if(score <=20) {
+                    titlemsg = "You are bad!"
+                } else if(score <=40) {
+                    titlemsg = "You are ok!"
+                } else if(score <=60) {
+                    titlemsg = "You are good!"
+                } else if(score <=80) {
+                    titlemsg = "You are very good!"
+                }     else if(score == 100) {
+                    titlemsg = "Perfect Score!"
+                }
+
+                let mesg = `You got ${points} points and made ${mistakes} mistakes.<br><br>Average score: ${Math.round((Number(points) / 30) * 100)}%<br>Score with mistakes: ${score - withmistakes}`;
                 if (draggers.children.length <= 0) {
                     iFinish = 11
                     console.log("yup")
                     my_modal_2.showModal();
                     modaltext.innerHTML = mesg
+                    modaltitle.innerHTML = titlemsg
                 } else {
                     iFinish++;
                 }        //  increment the counter
@@ -163,7 +184,7 @@
 <body class="overflow-x-hidden">
     <dialog id="my_modal_2" class="modal">
         <div class="modal-box">
-            <h3 class="font-bold text-lg select-none">You completed the quiz!</h3>
+            <h3 id="modaltitle" class="font-bold text-lg select-none"></h3>
             <p id="modaltext" class="py-4 select-none"></p>
         </div>
         <form method="dialog" class="modal-backdrop">
