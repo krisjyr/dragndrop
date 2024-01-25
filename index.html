@@ -31,6 +31,7 @@
             var btn = document.getElementById('mainbtny');
             var draggers = document.getElementById('draggers')
             var droppers = document.getElementById('droppers')
+            var everythingLiterally = document.getElementById("everythingLiterally")
             btn.classList.remove("btn-success");
             btn.classList.add("btn-error");
             btn.innerHTML = "Reset";
@@ -40,6 +41,9 @@
             droppers.classList.remove("opacity-0");
             draggers.classList.add("opacity-100");
             droppers.classList.add("opacity-100");
+
+            everythingLiterally.classList.remove("overflow-y-hidden");
+            everythingLiterally.classList.add("overflow-y-auto");
         }
 
 
@@ -54,6 +58,10 @@
             droppers.classList.remove("opacity-100");
             draggers.classList.add("opacity-0");
             droppers.classList.add("opacity-0");
+
+            everythingLiterally.classList.remove("overflow-y-auto");
+            everythingLiterally.classList.add("overflow-y-hidden");
+            window.scrollTo(0, 0)
         }
 
 
@@ -65,24 +73,69 @@
                 const mistakes = document.getElementById('counterFalse').style.getPropertyValue('--value')
                 const score = Math.round((Number(points) / 30) * 100)
                 const withmistakes = Math.round((Number(mistakes) / 30) * 100)
+                const scorewithmistakes = score - withmistakes
                 const modaltitle = document.getElementById("modaltitle")
                 let titlemsg = ""
-                if (score == 0) {
-                    titlemsg = "You are a disgrace!"
-                } else if(score <=20) {
+                if (scorewithmistakes <= 0) {
+                    titlemsg = "You are a disgrace to society!"
+                    modaltitle.classList.add("text-error")
+                    modaltitle.classList.remove("text-primary")
+                    modaltitle.classList.remove("text-secondary")
+                    modaltitle.classList.remove("text-info")
+                    modaltitle.classList.remove("text-warning")
+                    modaltitle.classList.remove("text-success")
+                } else if (scorewithmistakes <= 20) {
                     titlemsg = "You are bad!"
-                } else if(score <=40) {
-                    titlemsg = "You are ok!"
-                } else if(score <=60) {
-                    titlemsg = "You are good!"
-                } else if(score <=80) {
-                    titlemsg = "You are very good!"
-                }     else if(score == 100) {
-                    titlemsg = "Perfect Score!"
+                    modaltitle.classList.add("text-error")
+                    modaltitle.classList.remove("text-primary")
+                    modaltitle.classList.remove("text-secondary")
+                    modaltitle.classList.remove("text-info")
+                    modaltitle.classList.remove("text-warning")
+                    modaltitle.classList.remove("text-success")
+                } else if (scorewithmistakes <= 40) {
+                    titlemsg = "Try again!"
+                    modaltitle.classList.add("text-warning")
+                    modaltitle.classList.remove("text-primary")
+                    modaltitle.classList.remove("text-secondary")
+                    modaltitle.classList.remove("text-info")
+                    modaltitle.classList.remove("text-error")
+                    modaltitle.classList.remove("text-success")
+                } else if (scorewithmistakes <= 60) {
+                    titlemsg = "Decent.. I guess..!"
+                    modaltitle.classList.add("text-info")
+                    modaltitle.classList.remove("text-primary")
+                    modaltitle.classList.remove("text-secondary")
+                    modaltitle.classList.remove("text-error")
+                    modaltitle.classList.remove("text-warning")
+                    modaltitle.classList.remove("text-success")
+                } else if (scorewithmistakes <= 80) {
+                    titlemsg = "You are definetly decent!"
+                    modaltitle.classList.add("text-success")
+                    modaltitle.classList.remove("text-primary")
+                    modaltitle.classList.remove("text-secondary")
+                    modaltitle.classList.remove("text-info")
+                    modaltitle.classList.remove("text-error")
+                    modaltitle.classList.remove("text-warning")
+                                    } else if (scorewithmistakes <= 99) {
+                    titlemsg = "Nerd 🤓"
+                    modaltitle.classList.add("text-primary")
+                    modaltitle.classList.remove("text-secondary")
+                    modaltitle.classList.remove("text-info")
+                    modaltitle.classList.remove("text-error")
+                    modaltitle.classList.remove("text-warning")
+                    modaltitle.classList.remove("text-success")
+                } else if (scorewithmistakes == 100) {
+                    titlemsg = "You are a true nerd emoji!"
+                    modaltitle.classList.add("text-secondary")
+                    modaltitle.classList.remove("text-primary")
+                    modaltitle.classList.remove("text-info")
+                    modaltitle.classList.remove("text-error")
+                    modaltitle.classList.remove("text-warning")
+                    modaltitle.classList.remove("text-success")
                 }
 
-                let mesg = `You got ${points} points and made ${mistakes} mistakes.<br><br>Average score: ${Math.round((Number(points) / 30) * 100)}%<br>Score with mistakes: ${score - withmistakes}`;
-                if (draggers.children.length <= 0) {
+                let mesg = `You got <span class="text-success font-bold">${points}</span> points and made <span class="text-error font-bold">${mistakes}</span> mistakes.<br><br>Average score: ${Math.round((Number(points) / 30) * 100)}%<br>Score with mistakes: ${scorewithmistakes}%`;
+                if (draggers.children.length <= 0   ) {
                     iFinish = 11
                     console.log("yup")
                     my_modal_2.showModal();
@@ -181,7 +234,7 @@
     </script>
 </head>
 
-<body class="overflow-x-hidden">
+<body id="everythingLiterally" class="overflow-x-hidden overflow-y-hidden">
     <dialog id="my_modal_2" class="modal">
         <div class="modal-box">
             <h3 id="modaltitle" class="font-bold text-lg select-none"></h3>
@@ -208,18 +261,15 @@
                     </ul>
                 </div>
             </div>
-
-
-
             <button onclick="start()" id="mainbtny"
                 class="btn btn-outline btn-success btn-wide mb-12 mt-6 lg:btn-lg">Start</button>
 
         </div>
     </header>
     <main class="flex flex-row xl:flex-col my-8 xl:my-0 xl:mx-8">
-        <container class="flex flex-row z-20 content-center sticky top-0 px-8">
+        <container class="flex flex-row z-20 content-center sticky top-0 px-8 backdrop-blur-lg py-4 pt-8">
             <container id="draggers"
-                class="flex flex-row flex-wrap gap-4 pt-8 justify-start mx-8 opacity-0 max-xl:h-min-screen transition duration-200">
+                class="flex flex-row flex-wrap gap-4 justify-start mx-8 opacity-0 max-xl:h-min-screen transition duration-200">
 
                 <!-- DRAGGERS BEGIN -->
 
@@ -258,7 +308,7 @@
 
             </container>
 
-            <div class="flex flex-col xl:flex-row gap-12 text-center pt-8 m-auto w-min select-none">
+            <div class="flex flex-col xl:flex-row gap-12 text-center m-auto w-min select-none">
                 <div class="flex flex-col content-center">
                     <span class="relative flex h-3 w-3 z-30 top-2">
                         <span
